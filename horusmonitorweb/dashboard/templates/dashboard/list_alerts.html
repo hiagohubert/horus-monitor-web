@@ -1,0 +1,53 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% load mathfilters %}
+{% block titulo %} 
+Dashboard 
+{% endblock %} 
+{% block subtitulo %} 
+Alertas
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <li>Configuração de alertas por email</li>
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="machine_id" id="machine_id" value="{{machine.id}}">
+    <div class="row"> 
+        <div class="col-lg-6">
+                        <h2>Alertas configurados</h2>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Máximo Atenção</th>
+                                        <th>Máximo Critico</th>
+                                        <th>Tipo de alerta</th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for alert in machine.alertconfig_set.all %}
+                                    <tr>
+                                        <td class="warning">{{alert.max_warning}} %</td>
+                                        <td class="danger">{{alert.max_critical}} %</td>
+                                        <td>{{alert.get_alert_type_display}}</td>
+                                        <td>
+                                            <a href="#" class="fa fa-pencil-square-o" aria-hidden="true"></a>
+                                            <a href="?id_alert={{alert.id}}&a=del" class="fa fa-trash" aria-hidden="true"></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+    </div>
+    
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

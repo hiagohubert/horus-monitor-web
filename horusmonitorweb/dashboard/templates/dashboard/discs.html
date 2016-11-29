@@ -1,0 +1,52 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% load mathfilters %}
+{% block titulo %} 
+Dashboard 
+{% endblock %} 
+{% block subtitulo %} 
+Discos do servidor
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <li>Discos Servidor</li>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row"> 
+    <input type="hidden" name="machine_id" id="machine_id" value="{{machine.id}}">
+    {% for disc in machine.disc_set.all %}
+        <div class="col-lg-3">
+            <div class="panel" style="text-align:center;">
+                <div class="panel-heading">
+                    <strong class="panel-title">{{disc.mounted_in}}</strong>
+                </div>
+                <div class="panel-body">
+                    <div id="{{disc.mounted_in}}" style="height:150px;"></div>
+                    <strong>{{disc.used}} em uso de {{disc.size}} ({{disc.free}} livre)</strong>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/plugins/morris/raphael.min.js' %}"></script>
+<script src="{% static 'js/plugins/morris/morris.min.js' %}"></script>
+<script type="text/javascript">
+    {% for disc in machine.disc_set.all %}
+        Morris.Donut({
+          element: '{{disc.mounted_in}}',
+          data: [
+            {label: "Em uso", value: {{disc.free_percent|sub:"100"|abs}}},
+            {label: "Livre", value: {{disc.free_percent}}},
+          ],
+          formatter: function (value, data) { return value + '%'; }
+        });
+    {% endfor %}
+</script>
+{% endblock %}

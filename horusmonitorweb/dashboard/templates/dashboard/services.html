@@ -1,0 +1,71 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% load mathfilters %}
+{% block titulo %} 
+Dashboard 
+{% endblock %} 
+{% block subtitulo %} 
+Serviços do servidor
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <li>Serviços Servidor</li>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row"> 
+    <input type="hidden" name="machine_id" id="machine_id" value="{{machine.id}}">
+        <div class="">
+            <div class="panel" style="text-align:center;">
+                <div class="panel-heading">
+                    <strong class="panel-title">Serviços</strong>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;">Nome</th>
+                                <th style="text-align:center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in machine.service_set.all %}    
+                            <tr>
+                                <td>{{service.name}}</td>
+                                <td>
+                                    {% if service.status == 1 %}
+                                    <span class="label label-success">Ativo</span>
+                                    {% else %}
+                                    <span class="label label-default">Inativo</span>
+                                    {%endif%}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/plugins/morris/raphael.min.js' %}"></script>
+<script src="{% static 'js/plugins/morris/morris.min.js' %}"></script>
+<script type="text/javascript">
+    {% for disc in machine.disc_set.all %}
+        Morris.Donut({
+          element: '{{disc.mounted_in}}',
+          data: [
+            {label: "Em uso", value: {{disc.free_percent|sub:"100"|abs}}},
+            {label: "Livre", value: {{disc.free_percent}}},
+          ],
+          formatter: function (value, data) { return value + '%'; }
+        });
+    {% endfor %}
+</script>
+{% endblock %}

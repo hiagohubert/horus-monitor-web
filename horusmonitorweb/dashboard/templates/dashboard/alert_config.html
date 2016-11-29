@@ -1,0 +1,48 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% load mathfilters %}
+{% block titulo %} 
+Dashboard 
+{% endblock %} 
+{% block subtitulo %} 
+Alertas
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <li>Configuração de alertas por email</li>
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="machine_id" id="machine_id" value="{{machine.id}}">
+    <div class="row"> 
+    {% if success %}
+        <div class="alert alert-success" role="alert">Alerta cadastrado com sucesso!</div>
+    {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <fieldset>
+                {{ form.non_field_errors }}
+                 
+                {% for field in form %}
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                    {{ field.label_tag }}
+                    {{ field }}
+                   </div>
+                    {{ field.errors }}
+                </div>
+                {% endfor %}
+                
+               {% if not success %}
+                            <input class="btn btn-lg btn-default" type="submit" value="Adicionar"/>
+                {% endif %}
+            </fieldset>
+        </form>
+    </div>
+    
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

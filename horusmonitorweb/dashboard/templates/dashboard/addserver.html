@@ -1,0 +1,38 @@
+{% extends "dashboard/base_semmenu.html" %}
+        {% block titulo %} 
+             Monitoramento <small>Servidores Monitorados</small>
+        {% endblock %}
+
+        {% block breadcrumb %} 
+                {{ block.super }}
+                <li> Adicionar servidor </li>
+        {% endblock%}
+
+        {% block content %}
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-6" style="height:300px;">
+                        {% if success %}
+                        <div class="alert alert-success" role="alert">Servidor adicionado com sucesso, utilize o token <strong>{{token}}</strong> no Agente para iniciar monitoramento</div>
+                        {% endif %}
+                         <form role="form" method="post">
+                             {% csrf_token %}
+                             {{ form.non_field_errors }}
+                             {% for field in form %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            {% endfor %}
+                            {% if not success %}
+                            <input class="btn btn-lg btn-default" type="submit" value="Adicionar"/>
+                            {% endif %}
+                         </form>
+                     </div>
+                </div>
+                <!-- /.row -->
+
+            {% endblock %}
+
+      
